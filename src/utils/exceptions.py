@@ -46,3 +46,9 @@ class InvalidTask(APIException):
     description = "This task does not exist."
 
 
+class InvalidUser(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    detail = "User not found"
+    description = "This user does not exist."
+
+

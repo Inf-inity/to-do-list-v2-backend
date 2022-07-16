@@ -9,7 +9,7 @@ from schemas.user import User as Us
 from schemas.token import Token
 from utils.auth import admin_auth, create_access_token, get_token, user_auth
 from utils.environment import ACCESS_TOKEN_EXPIRE_MINUTES
-from utils.exceptions import AccountDisabled, InvalidCredentials, NameDuplicated
+from utils.exceptions import AccountDisabled, InvalidCredentials, InvalidUser, NameDuplicated, PermissionDeniedError
 from utils.crypt import hash_password, verify_password
 
 
@@ -51,6 +51,20 @@ async def all_users(
         query = query.where(User.admin == admin)
 
     return {"users": [user.serialize async for user in await db.stream(query.order_by(User.id))]}
+
+
+@router.delete("/users/delete", dependencies=[user_auth])
+async def delete_task(request: Request, user_id: int):
+    exc_user = await User.get_user_by_token(get_token(request))
+    user = await db.get(User, id=user_id)
+    if not user:
+        raise InvalidUser
+
+    if (user == exc_user) or exc_user.admin and not user.admin:
+        await user.remove()
+        return True
+    else:
+        raise PermissionDeniedError
 
 
 @router.get("/users/me", dependencies=[user_auth])
