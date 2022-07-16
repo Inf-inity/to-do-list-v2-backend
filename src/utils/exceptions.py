@@ -52,3 +52,7 @@ class InvalidUser(APIException):
     description = "This user does not exist."
 
 
+class InvalidPassword(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    detail = "Invalid password"
+    description = "This password is invalid."

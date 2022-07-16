@@ -9,7 +9,7 @@ from schemas.user import User as Us
 from schemas.token import Token
 from utils.auth import admin_auth, create_access_token, get_token, user_auth
 from utils.environment import ACCESS_TOKEN_EXPIRE_MINUTES
-from utils.exceptions import AccountDisabled, InvalidCredentials, InvalidUser, NameDuplicated, PermissionDeniedError
+from utils.exceptions import AccountDisabled, InvalidCredentials, InvalidPassword, InvalidUser, NameDuplicated, PermissionDeniedError
 from utils.crypt import hash_password, verify_password
 
 
@@ -70,3 +70,25 @@ async def delete_task(request: Request, user_id: int):
 @router.get("/users/me", dependencies=[user_auth])
 async def get_me(request: Request):
     return (await User.get_user_by_token(get_token(request))).serialize
+
+
+@router.post("/users/edit/name", dependencies=[user_auth])
+async def edit_user_name(request: Request, name: str):
+    exc_user = await User.get_user_by_token(get_token(request))
+
+    if await User.get_user_by_name(name):
+        raise NameDuplicated
+
+    exc_user.name = name
+    return exc_user.serialize
+
+
+@router.post("/users/edit/password", dependencies=[user_auth])
+async def edit_user_password(request: Request, old_pw: str, new_pw):
+    exc_user = await User.get_user_by_token(get_token(request))
+
+    if not verify_password(exc_user.password, old_pw):
+        raise InvalidPassword
+
+    exc_user.password = hash_password(new_pw)
+    return True
