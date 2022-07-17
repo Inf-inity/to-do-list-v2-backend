@@ -44,7 +44,8 @@ async def all_users(
     enabled: bool | None = Query(None),
     admin: bool | None = Query(None),
 ):
-    query = select(User)  # TODO: es werden noch keine tasks geladen
+    # noinspection PyTypeChecker
+    query = select(User, User.tasks)
     if enabled is not None:
         query = query.where(User.enabled == enabled)
     if admin is not None:
