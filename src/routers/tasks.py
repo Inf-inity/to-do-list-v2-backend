@@ -70,7 +70,7 @@ async def edit_task(
     return task
 
 
-@router.post("/tasks/resolve")
+@router.post("/tasks/resolve", dependencies=[user_auth])
 async def resolve_task(request: Request, task_id: int):
     user = await User.get_user_by_token(get_token(request))
     task = await db.get(UserTask, id=task_id)
