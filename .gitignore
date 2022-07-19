@@ -138,3 +138,8 @@ node_modules
 
 # docker-compose.yml
 docker-compose.yml
+
+# .idea
+./idea
+.idea
+./idea/
