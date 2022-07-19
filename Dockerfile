@@ -1,12 +1,12 @@
 FROM python:3.10-alpine
-# used with live-reload so .pyc isn't stored on host
+
 ENV PYTHONPYCACHEPREFIX=/tmp
-#/
+
+WORKDIR /to-do-list-v2-backend
 RUN pip install virtualenv
 RUN virtualenv venv
 RUN source venv/bin/activate
-WORKDIR /app
-EXPOSE 5000
+EXPOSE 9999
 COPY . .
 RUN pip install -r requirements.txt
-ENTRYPOINT ["python", "/app/src/main.py"]
+ENTRYPOINT ["python", "/to-do-list-v2-backend/src/main.py"]

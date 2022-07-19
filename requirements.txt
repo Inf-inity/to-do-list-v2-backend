@@ -1,0 +1,12 @@
+pip
+contextvars
+sqlalchemy
+aiomysql
+aioredis
+uvicorn
+fastapi
+pydantic
+python-multipart
+passlib[bcrypt]
+python-jose[cryptography]
+starlette

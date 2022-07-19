@@ -8,4 +8,4 @@ logger = get_logger(__name__)
 
 
 if __name__ == "__main__":
-    uvicorn.run("to-do-list-v2-backend.src.app:app", host=HOST, port=PORT, reload=True, debug=True)
+    uvicorn.run("app:app", host=HOST, port=PORT, reload=True, debug=True)
